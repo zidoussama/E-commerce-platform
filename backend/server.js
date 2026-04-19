@@ -3,18 +3,20 @@ const mongoose = require("mongoose");
 const config = require("config");
 const cors = require("cors");
 
+require("dotenv").config();
+
 // Load routes
-const users = require("./routes/api/users"); 
-const products = require("./routes/api/product");
-const categories = require("./routes/api/categoryRoutes");
-const likes = require("./routes/api/likes"); // Assuming you have a likes route
-const comment = require("./routes/api/comments"); // Assuming you have a comments route
-const userinfoRoutes = require('./routes/api/userinfo');
-const cartRoutes = require('./routes/api/cart'); // Assuming you have a cart route
-const ordersRoutes = require('./routes/api/orders'); // Assuming you have an orders route
-const Deals = require('./routes/api/deals'); // Assuming you have a deals route
-const googleRoutes = require('./routes/api/googleRoute'); // Assuming you have a google route
-const dashboard =require('./routes/api/dashboard'); // Assuming you have a dashboard route
+const users = require("./src/routes/users");
+const products = require("./src/routes/product");
+const categories = require("./src/routes/categoryRoutes");
+const likes = require("./src/routes/likes");
+const comment = require("./src/routes/comments");
+const userinfoRoutes = require('./src/routes/userinfo');
+const cartRoutes = require('./src/routes/cart');
+const ordersRoutes = require('./src/routes/orders');
+const Deals = require('./src/routes/deals');
+const googleRoutes = require('./src/routes/googleRoute');
+const dashboard = require('./src/routes/dashboard');
 
 const app = express();
 
@@ -28,7 +30,7 @@ app.use(cors({
 app.use(express.json({ limit: '500mb' }));
 
 // MongoDB Connection
-const mongo_url = config.get("mongo_url");
+const mongo_url = process.env.MONGO_URI;
 mongoose.set("strictQuery", true);
 mongoose
   .connect(mongo_url)
