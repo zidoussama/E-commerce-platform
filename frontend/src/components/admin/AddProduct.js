@@ -235,7 +235,7 @@ const AddProduct = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/categories');
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/categories`);
         if (!response.ok) throw new Error('Failed to fetch categories');
         const data = await response.json();
         setCategories(data);
@@ -251,7 +251,7 @@ const AddProduct = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/products');
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/products`);
         if (!response.ok) throw new Error('Failed to fetch products');
         const data = await response.json();
         setProducts(data);
@@ -367,7 +367,7 @@ const AddProduct = () => {
 
       let response;
       if (editingProductId) {
-        response = await fetch(`http://localhost:3001/api/products/${editingProductId}`, {
+        response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/products/${editingProductId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -375,7 +375,7 @@ const AddProduct = () => {
           body: JSON.stringify(productData),
         });
       } else {
-        response = await fetch('http://localhost:3001/api/products/add', {
+        response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/products/add`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -403,7 +403,7 @@ const AddProduct = () => {
       setEditingProductId(null);
       setShowForm(false);
 
-      const productsResponse = await fetch('http://localhost:3001/api/products');
+      const productsResponse = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/products`);
       if (productsResponse.ok) {
         const data = await productsResponse.json();
         setProducts(data);
@@ -442,7 +442,7 @@ const AddProduct = () => {
     if (!window.confirm('Are you sure you want to delete this product?')) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/products/${productId}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/products/${productId}`, {
         method: 'DELETE',
       });
 

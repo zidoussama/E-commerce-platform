@@ -133,7 +133,7 @@ const AppBarComponent = ({ onSearch, setCurrentPage }) => {
         const decoded = jwtDecode(token);
         const userId = decoded.id;
 
-        fetch(`http://localhost:3001/api/userinfo/${userId}`, {
+        fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/userinfo/${userId}`, {
           headers: { 'Authorization': `Bearer ${token}` },
         })
           .then(res => {
@@ -155,7 +155,7 @@ const AppBarComponent = ({ onSearch, setCurrentPage }) => {
 
         const fetchCart = async () => {
           try {
-            const response = await fetch(`http://localhost:3001/api/cart?userId=${userId}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/cart?userId=${userId}`, {
               headers: { 'Authorization': `Bearer ${token}` },
             });
             if (!response.ok) {
@@ -195,7 +195,7 @@ const AppBarComponent = ({ onSearch, setCurrentPage }) => {
         try {
           const decoded = jwtDecode(token);
           const userId = decoded.id;
-          const response = await fetch(`http://localhost:3001/api/cart?userId=${userId}`, {
+          const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/cart?userId=${userId}`, {
             headers: { 'Authorization': `Bearer ${token}` },
           });
           if (!response.ok) {

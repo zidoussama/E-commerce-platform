@@ -19,7 +19,7 @@ metadata:
   name: mongo
   namespace: test
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: mongo
@@ -73,12 +73,14 @@ spec:
     spec:
       containers:
         - name: backend
-          image: backend:latest
+          image: oussamazid/backend:latest
           ports:
-            - containerPort: 3001
-          env:
-            - name: MONGO_URI
-              value: "mongodb://mongo:27017/ecommerce"
+            - containerPort: 3002
+          envFrom:
+          - secretRef:
+              name: backend-secret
+          - configMapRef:
+              name: backend-config
 ---
 apiVersion: v1
 kind: Service
@@ -89,8 +91,8 @@ spec:
   selector:
     app: backend
   ports:
-    - port: 3001
-      targetPort: 3001
+    - port: 3002
+      targetPort: 3002
 ---
 # ════════════════════════════════════════════════════════════════════════════════
 # FRONTEND
@@ -112,9 +114,14 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: frontend:latest
+          image: oussamazid/frontend:latest
           ports:
-            - containerPort: 3000
+            - containerPort: 3020
+          envFrom:
+          - secretRef:
+              name: frontend-secret
+          - configMapRef:
+              name: frontend-config
 ---
 apiVersion: v1
 kind: Service
@@ -122,9 +129,9 @@ metadata:
   name: frontend
   namespace: test
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: frontend
   ports:
     - port: 80
-      targetPort: 3000
+      targetPort: 3020

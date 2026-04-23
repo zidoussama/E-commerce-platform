@@ -167,7 +167,7 @@ const AddCategories = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/categories');
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/categories`);
         if (!response.ok) throw new Error('Failed to fetch categories');
         const data = await response.json();
         setCategories(data);
@@ -201,7 +201,7 @@ const AddCategories = () => {
     try {
       let response;
       if (editingCategoryId) {
-        response = await fetch(`http://localhost:3001/api/categories/${editingCategoryId}`, {
+        response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/categories/${editingCategoryId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -209,7 +209,7 @@ const AddCategories = () => {
           body: JSON.stringify({ name: formData.name }),
         });
       } else {
-        response = await fetch('http://localhost:3001/api/categories/add', {
+        response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/categories/add`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -228,7 +228,7 @@ const AddCategories = () => {
       setEditingCategoryId(null);
       setShowForm(false);
 
-      const categoriesResponse = await fetch('http://localhost:3001/api/categories');
+      const categoriesResponse = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/categories`);
       if (categoriesResponse.ok) {
         const data = await categoriesResponse.json();
         setCategories(data);
@@ -254,7 +254,7 @@ const AddCategories = () => {
     if (!window.confirm('Are you sure you want to delete this category?')) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/categories/${categoryId}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/categories/${categoryId}`, {
         method: 'DELETE',
       });
 

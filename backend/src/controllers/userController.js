@@ -42,8 +42,8 @@ class UserController {
       });
 
       const user = await newUser.save();
-      const token = jwt.sign({ id: user.id, role: user.role }, config.get("jwtSecret"), {
-        expiresIn: config.get("tokenExpire"),
+      const token = jwt.sign({ id: user.id, role: user.role }, process.env.jwtSecret, {
+        expiresIn: process.env.tokenExpire,
       });
 
       res.status(200).json({ token, role: user.role });
@@ -75,8 +75,8 @@ class UserController {
         return res.status(401).json({ message: "Incorrect password" });
       }
 
-      const token = jwt.sign({ id: user.id, role: user.role }, config.get("jwtSecret"), {
-        expiresIn: config.get("tokenExpire"),
+      const token = jwt.sign({ id: user.id, role: user.role }, process.env.jwtSecret, {
+        expiresIn: process.env.tokenExpire,
       });
 
       res.status(200).json({ token, role: user.role });

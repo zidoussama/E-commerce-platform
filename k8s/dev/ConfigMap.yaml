@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: dev
+data:
+  TOKEN_EXPIRE: "2562000"
+  NODE_ENV: "development"
+  PORT: "3001"

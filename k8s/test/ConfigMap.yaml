@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: test
+data:
+  TOKEN_EXPIRE: "2562000"
+  NODE_ENV: "test"
+  PORT: "3002"
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: test
+data:
+  REACT_APP_API_URL: "https://test.ecomp.codes"
+  PORT: "3020"

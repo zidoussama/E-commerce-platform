@@ -397,6 +397,10 @@ const foodProducts = [
 
 generateProductsForCategory("Food", foodProducts);
 
+// Categories derived from sample products
+const sampleCategories = [...new Set(sampleProducts.map((product) => product.categoryName))]
+  .map((name) => ({ name }));
+
 // Sample users data
 const sampleUsers = [
   {
@@ -472,27 +476,30 @@ async function seedDatabase() {
       console.log(`Added user: ${userData.email}`);
     }
 
-    // Seed categories and products
-    console.log('Seeding categories and products...');
+    // Seed categories first
+    console.log('Seeding categories...');
+    const categoryMap = new Map();
+    for (const categoryData of sampleCategories) {
+      const category = await Category.findOneAndUpdate(
+        { name: categoryData.name },
+        { $set: { name: categoryData.name } },
+        { new: true, upsert: true, setDefaultsOnInsert: true }
+      );
+      categoryMap.set(category.name, category);
+      console.log(`Ensured category: ${category.name}`);
+    }
+
+    // Seed products and ensure they reference the correct category
+    console.log('Seeding products...');
     const createdProducts = [];
     for (const productData of sampleProducts) {
-      // Find the category by name
-      const category = await Category.findOne({ name: productData.categoryName });
+      const category = categoryMap.get(productData.categoryName);
       if (!category) {
-        console.log(`Category ${productData.categoryName} not found, skipping product ${productData.name}`);
+        console.log(`Category ${productData.categoryName} missing, skipping product ${productData.name}`);
         continue;
       }
 
-      // Check if product already exists
-      const existingProduct = await Product.findOne({ name: productData.name });
-      if (existingProduct) {
-        console.log(`Product ${productData.name} already exists, skipping`);
-        createdProducts.push(existingProduct);
-        continue;
-      }
-
-      // Create the product
-      const product = new Product({
+      const productPayload = {
         name: productData.name,
         description: productData.description,
         price: productData.price,
@@ -500,8 +507,18 @@ async function seedDatabase() {
         stock: productData.stock,
         image: productData.image,
         size: productData.size
-      });
+      };
 
+      const existingProduct = await Product.findOne({ name: productData.name });
+      if (existingProduct) {
+        Object.assign(existingProduct, productPayload);
+        await existingProduct.save();
+        createdProducts.push(existingProduct);
+        console.log(`Updated product: ${productData.name}`);
+        continue;
+      }
+
+      const product = new Product(productPayload);
       await product.save();
       createdProducts.push(product);
       console.log(`Added product: ${productData.name}`);

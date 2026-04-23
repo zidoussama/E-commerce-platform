@@ -118,7 +118,7 @@ const ProductDetail = ({ id, onBack }) => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/products/${id}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/products/${id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch product details');
         }
@@ -141,7 +141,7 @@ const ProductDetail = ({ id, onBack }) => {
 
       try {
         const likeResponse = await fetch(
-          `http://localhost:3001/api/likes?userId=${userId}&productId=${id}`,
+          `${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/likes?userId=${userId}&productId=${id}`,
           {
             headers: {
               'Authorization': `Bearer ${token}`
@@ -169,7 +169,7 @@ const ProductDetail = ({ id, onBack }) => {
 
     const fetchComments = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/comments?productId=${id}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/comments?productId=${id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch comments');
         }
@@ -179,7 +179,7 @@ const ProductDetail = ({ id, onBack }) => {
 
         const userIds = [...new Set(data.map(comment => typeof comment.userId === 'object' ? comment.userId._id : comment.userId))];
         const userPromises = userIds.map(userId =>
-          fetch(`http://localhost:3001/api/userinfo/${userId}`)
+          fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/userinfo/${userId}`)
             .then(res => {
               if (!res.ok) {
                 throw new Error(`Failed to fetch user ${userId}`);
@@ -220,7 +220,7 @@ const ProductDetail = ({ id, onBack }) => {
     }
 
     try {
-      const response = await fetch('http://localhost:3001/api/cart/add', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/cart/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -265,7 +265,7 @@ const ProductDetail = ({ id, onBack }) => {
     setLikeError(null);
     try {
       if (hasLiked) {
-        const response = await fetch('http://localhost:3001/api/likes/remove', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/likes/remove`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -292,7 +292,7 @@ const ProductDetail = ({ id, onBack }) => {
         setHasLiked(false);
         setLikeCount(prev => prev - 1);
       } else {
-        const response = await fetch('http://localhost:3001/api/likes/add', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/likes/add`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -342,7 +342,7 @@ const ProductDetail = ({ id, onBack }) => {
     setCommentError(null);
 
     try {
-      const response = await fetch('http://localhost:3001/api/comments/add', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/comments/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -362,7 +362,7 @@ const ProductDetail = ({ id, onBack }) => {
       const data = await response.json();
       setComments([data.comment, ...comments]);
 
-      const userResponse = await fetch(`http://localhost:3001/api/userinfo/${userId}`);
+      const userResponse = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/userinfo/${userId}`);
       if (userResponse.ok) {
         const userData = await userResponse.json();
         setUsersInfo(prev => ({
@@ -395,7 +395,7 @@ const ProductDetail = ({ id, onBack }) => {
     setCommentError(null);
 
     try {
-      const response = await fetch(`http://localhost:3001/api/comments/${commentId}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/comments/${commentId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -427,7 +427,7 @@ const ProductDetail = ({ id, onBack }) => {
     setCommentError(null);
 
     try {
-      const response = await fetch(`http://localhost:3001/api/comments/${commentId}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/comments/${commentId}`, {
         method: 'DELETE'
       });
 

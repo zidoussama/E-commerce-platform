@@ -1,0 +1,11 @@
+# ConfigMap for Backend Deployment in Production Environment
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: prod
+data:
+  TOKEN_EXPIRE: "2562000"
+  NODE_ENV: "production"
+  PORT: "3003"

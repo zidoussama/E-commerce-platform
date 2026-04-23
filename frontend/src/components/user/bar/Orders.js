@@ -112,7 +112,7 @@ const Orders = () => {
 
     const fetchOrders = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/orders?userId=${userId}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/orders?userId=${userId}`);
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.message || 'Failed to fetch orders');
@@ -139,7 +139,7 @@ const Orders = () => {
     if (!window.confirm('Are you sure you want to cancel this order?')) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/orders/${orderId}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/orders/${orderId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

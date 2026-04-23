@@ -1,4 +1,4 @@
-# ── Deployment ─────────────────────────────────────────────────────────────────
+# Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,18 +16,21 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: frontend:latest
+          image: gcr.io/intrepid-alloy-493208-k9/frontend
           ports:
             - containerPort: 3000
+          env:
+          - name: REACT_APP_API_URL
+            value: "https://prod.ecomp.codes"
 ---
-# ── Service (LoadBalancer — public entry point) ────────────────────────────────
+#Service
 apiVersion: v1
 kind: Service
 metadata:
   name: frontend
   namespace: prod
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: frontend
   ports:

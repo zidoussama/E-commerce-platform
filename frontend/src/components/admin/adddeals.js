@@ -146,7 +146,7 @@ const AddDeals = () => {
   useEffect(() => {
     const fetchDeals = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/deals');
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/deals`);
         if (!response.ok) {
           throw new Error('Failed to fetch deals');
         }
@@ -193,7 +193,7 @@ const AddDeals = () => {
         Array.from(selectedImages).map((file) => fileToBase64(file))
       );
 
-      const response = await fetch('http://localhost:3001/api/deals', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/deals`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -224,7 +224,7 @@ const AddDeals = () => {
 
   const handleDeleteDeal = async (dealId) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/deals/${dealId}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/deals/${dealId}`, {
         method: 'DELETE',
       });
 

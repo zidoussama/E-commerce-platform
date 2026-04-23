@@ -97,7 +97,7 @@ const Cart = () => {
 
     try {
       const likeResponse = await fetch(
-        `http://localhost:3001/api/likes?userId=${userId}&productId=${productId}`,
+        `${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/likes?userId=${userId}&productId=${productId}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -133,7 +133,7 @@ const Cart = () => {
 
     const fetchCart = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/cart?userId=${userId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/cart?userId=${userId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -183,7 +183,7 @@ const Cart = () => {
 
   const handleAddToCart = async (productId, quantity = 1, size = null) => {
     try {
-      const response = await fetch('http://localhost:3001/api/cart/add', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/cart/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -226,7 +226,7 @@ const Cart = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3001/api/cart/update', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/cart/update`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -262,7 +262,7 @@ const Cart = () => {
 
   const handleRemoveItem = async (productId, size) => {
     try {
-      const response = await fetch('http://localhost:3001/api/cart/remove', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/cart/remove`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -297,7 +297,7 @@ const Cart = () => {
 
   const handleClearCart = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/cart/clear', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/cart/clear`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -343,7 +343,7 @@ const Cart = () => {
     try {
       const currentLikeData = likesData[productId] || { hasLiked: false, likeCount: 0 };
       if (currentLikeData.hasLiked) {
-        const response = await fetch('http://localhost:3001/api/likes/remove', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/likes/remove`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -375,7 +375,7 @@ const Cart = () => {
           }
         }));
       } else {
-        const response = await fetch('http://localhost:3001/api/likes/add', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/likes/add`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

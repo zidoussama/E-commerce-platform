@@ -64,7 +64,7 @@ const Favorites = () => {
       try {
         // Step 1: Fetch the user's likes
         const likesResponse = await fetch(
-          `http://localhost:3001/api/likes?userId=${userId}`,
+          `${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/likes?userId=${userId}`,
           {
             headers: {
               'Authorization': `Bearer ${token}`
@@ -94,7 +94,7 @@ const Favorites = () => {
         // Step 2: Extract product IDs and fetch product details
         const productIds = likesData.map(like => like.product._id || like.product);
         const productPromises = productIds.map(productId =>
-          fetch(`http://localhost:3001/api/products/${productId}`)
+          fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/products/${productId}`)
             .then(res => {
               if (!res.ok) {
                 throw new Error(`Failed to fetch product ${productId}`);
@@ -120,7 +120,7 @@ const Favorites = () => {
         setLikeStatus(initialLikeStatus);
 
         // Step 4: Fetch like counts for all products
-        const likeCountsResponse = await fetch('http://localhost:3001/api/likes/count');
+        const likeCountsResponse = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/likes/count`);
         if (!likeCountsResponse.ok) {
           throw new Error('Failed to fetch like counts');
         }
@@ -151,7 +151,7 @@ const Favorites = () => {
     try {
       if (likeStatus[productId]) {
         // Unlike the product
-        const response = await fetch('http://localhost:3001/api/likes/remove', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/likes/remove`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -179,7 +179,7 @@ const Favorites = () => {
         setLikedProducts(prev => prev.filter(product => product._id !== productId));
       } else {
         // Like the product (though this shouldn't happen on Favorites page)
-        const response = await fetch('http://localhost:3001/api/likes/add', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/likes/add`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -30,7 +30,7 @@ app.use(cors({
 app.use(express.json({ limit: '500mb' }));
 
 // MongoDB Connection
-const mongo_url = process.env.MONGO_URI;
+const mongo_url = process.env.MONGO_URI  ;
 mongoose.set("strictQuery", true);
 mongoose
   .connect(mongo_url)
@@ -61,5 +61,5 @@ app.use((req, res, next) => {
 
 
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT;
 app.listen(port, () => console.log(`Server running on port ${port}`));

@@ -1,5 +1,4 @@
     {
-    "mongo_url": "mongodb+srv://oussamazid30_db_user:utds7kSglcHNWc6n@cluster0.xxk2lrw.mongodb.net/",
     "jwtSecret": "jwtSecret",
     "tokenExpire":"2562000"
     

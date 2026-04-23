@@ -149,7 +149,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3001/api/users/register", formData);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/users/register`, formData);
       setMessage(response.data.msg);
       setFormData({
         firstname: "",

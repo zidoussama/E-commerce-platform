@@ -100,7 +100,7 @@ const Checkout = () => {
 
     const fetchData = async () => {
       try {
-        const cartResponse = await fetch(`http://localhost:3001/api/cart?userId=${userId}`, {
+        const cartResponse = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/cart?userId=${userId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -119,7 +119,7 @@ const Checkout = () => {
         const cartData = await cartResponse.json();
         setCart(cartData);
 
-        const userResponse = await fetch(`http://localhost:3001/api/userinfo/${userId}`, {
+        const userResponse = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/userinfo/${userId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -171,7 +171,7 @@ const Checkout = () => {
   // Function to update user information in the backend
   const updateUserInfo = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/api/userinfo/${userId}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/userinfo/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -246,7 +246,7 @@ const Checkout = () => {
       const order = await actions.order.capture();
       console.log('PayPal Payment Successful:', order);
 
-      const response = await fetch('http://localhost:3001/api/orders', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -314,7 +314,7 @@ const Checkout = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3001/api/orders', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
