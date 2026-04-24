@@ -84,7 +84,7 @@ const CommentsAdmin = () => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/comments/all`);
+        const response = await fetch(`/api/comments/all`);
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -113,7 +113,7 @@ const CommentsAdmin = () => {
     if (!window.confirm('Are you sure you want to delete this comment?')) return;
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/comments/${commentId}`, {
+      const response = await fetch(`/api/comments/${commentId}`, {
         method: 'DELETE',
       });
 

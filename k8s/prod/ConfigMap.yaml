@@ -9,3 +9,12 @@ data:
   TOKEN_EXPIRE: "2562000"
   NODE_ENV: "production"
   PORT: "3003"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: prod
+data:
+  REACT_APP_API_URL: "https://prod.ecomp.codes"

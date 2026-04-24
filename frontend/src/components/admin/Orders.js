@@ -137,7 +137,7 @@ const AdminOrders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/orders/all`);
+        const response = await fetch(`/api/orders/all`);
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -178,7 +178,7 @@ const AdminOrders = () => {
 
   const handleUpdateStatus = async (orderId, newStatus) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/orders/${orderId}`, {
+      const response = await fetch(`/api/orders/${orderId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

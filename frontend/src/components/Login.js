@@ -205,7 +205,7 @@ const Login = () => {
     setError(null);
     
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/users/login`, {
+      const response = await fetch(`/api/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -250,7 +250,7 @@ const Login = () => {
     setError(null);
     setResetMessage(null);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/users/forgot-password`, {
+      const response = await fetch(`/api/users/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: resetData.email }),
@@ -275,7 +275,7 @@ const Login = () => {
     setError(null);
     setResetMessage(null);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/users/verify-reset-code`, {
+      const response = await fetch(`/api/users/verify-reset-code`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: resetData.email, resetCode: resetData.code }),
@@ -304,7 +304,7 @@ const Login = () => {
     setError(null);
     setResetMessage(null);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/users/reset-password`, {
+      const response = await fetch(`/api/users/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

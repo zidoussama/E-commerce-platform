@@ -132,11 +132,11 @@ const Dashboard = () => {
     const fetchStats = async () => {
       try {
         const [productsRes, ordersRes, commentsRes, likesRes, usersRes] = await Promise.all([
-          fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/products`),
-          fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/orders/all`),
-          fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/comments/all`),
-          fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/likes`),
-          fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/users`),
+          fetch(`/api/products`),
+          fetch(`/api/orders/all`),
+          fetch(`/api/comments/all`),
+          fetch(`/api/likes`),
+          fetch(`/api/users`),
         ]);
 
         if (!productsRes.ok || !ordersRes.ok || !commentsRes.ok || !likesRes.ok || !usersRes.ok) {

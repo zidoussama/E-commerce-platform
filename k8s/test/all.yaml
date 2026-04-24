@@ -114,9 +114,9 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: oussamazid/frontend:latest
+          image: gcr.io/intrepid-alloy-493208-k9/frontend:v2
           ports:
-            - containerPort: 3020
+            - containerPort: 80
           envFrom:
           - secretRef:
               name: frontend-secret
@@ -134,4 +134,4 @@ spec:
     app: frontend
   ports:
     - port: 80
-      targetPort: 3020
+      targetPort: 80

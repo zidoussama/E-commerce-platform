@@ -114,9 +114,14 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: oussamazid/frontend:latest
+          image: gcr.io/intrepid-alloy-493208-k9/frontend:v2
           ports:
-            - containerPort: 3010
+            - containerPort: 80 
+          envFrom:
+            - secretRef:
+                name: frontend-secret
+            - configMapRef:
+                name: frontend-config
 ---
 apiVersion: v1
 kind: Service
@@ -124,10 +129,8 @@ metadata:
   name: frontend
   namespace: dev
 spec:
-  type: NodePort
   selector:
     app: frontend
   ports:
-    - port: 3010
-      targetPort: 3010
-      nodePort: 30000    
+    - port: 80
+      targetPort: 80 

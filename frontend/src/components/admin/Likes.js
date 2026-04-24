@@ -120,7 +120,7 @@ const LikesAdmin = () => {
   useEffect(() => {
     const fetchLikedProducts = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/likes/liked-products`);
+        const response = await fetch(`/api/likes/liked-products`);
 
         if (!response.ok) {
           const errorData = await response.json();

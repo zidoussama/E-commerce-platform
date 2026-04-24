@@ -69,7 +69,7 @@ const CategorySidebar = ({ selectedCategory, setSelectedCategory, expanded, setE
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/categories`);
+        const response = await fetch(`/api/categories`);
         if (!response.ok) {
           throw new Error('Failed to fetch categories');
         }

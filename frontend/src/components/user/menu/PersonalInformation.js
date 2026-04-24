@@ -189,7 +189,7 @@ const PersonalInformation = ({ onBack }) => {
         const decoded = jwtDecode(token);
         const userId = decoded.id;
 
-        fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/userinfo/${userId}`, {
+        fetch(`/api/userinfo/${userId}`, {
           headers: {
             'Authorization': `Bearer ${token}`, // Kept for frontend logic, though backend doesn't require it
           },
@@ -293,7 +293,7 @@ const PersonalInformation = ({ onBack }) => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/users/send-email-verification-code`, {
+      const response = await fetch(`/api/users/send-email-verification-code`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -316,7 +316,7 @@ const PersonalInformation = ({ onBack }) => {
 
   const handleResendCode = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/users/resend-email-verification-code`, {
+      const response = await fetch(`/api/users/resend-email-verification-code`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -357,7 +357,7 @@ const PersonalInformation = ({ onBack }) => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/users/verify-email-change`, {
+      const response = await fetch(`/api/users/verify-email-change`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -401,7 +401,7 @@ const PersonalInformation = ({ onBack }) => {
 
     const updateData = { [editingField]: formData[editingField] }; // Do not include email here
 
-    fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/userinfo/${userId}`, {
+    fetch(`/api/userinfo/${userId}`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`, // Kept for frontend logic, though backend doesn't require it

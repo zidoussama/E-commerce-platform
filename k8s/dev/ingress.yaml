@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dev-ingress
+  namespace: dev
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: dev.ecomp.codes
+    http:
+      paths:
+      - path: /api        # ← API traffic goes to backend
+        pathType: Prefix
+        backend:
+          service:
+            name: backend
+            port:
+              number: 3001
+      - path: /           # ← everything else goes to frontend
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend
+            port:
+              number: 80
