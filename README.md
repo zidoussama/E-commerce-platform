@@ -1,209 +1,177 @@
-# E-commerce Platform (MERN) - README Detaille
+# MERN E-Commerce Platform
 
-Plateforme e-commerce full-stack basee sur l'architecture MERN:
+This repository contains a full-stack e-commerce application with:
 
-- Frontend: React (Create React App), Material UI, PayPal
-- Backend: Node.js, Express, MongoDB (Mongoose)
-- Conteneurisation: Docker / Docker Compose
-- Orchestration: Kubernetes (environnements dev, test, prod)
+- Backend: Node.js + Express + MongoDB
+- Frontend: React (Create React App)
+- Containerization: Docker and Docker Compose
+- Orchestration: Kubernetes with separate dev, test, and prod manifests
 
-## 1. Vue d'ensemble
+This README focuses on:
 
-Le projet implemente les fonctionnalites classiques d'une boutique en ligne:
+1. Backend MVC architecture
+2. Kubernetes deployment structure
 
-- Authentification utilisateur (email/mot de passe + Google Login)
-- Catalogue produits avec categories
-- Likes et commentaires sur produits
-- Panier, checkout, commandes
-- Paiement PayPal ou paiement a la livraison
-- Espace admin (produits, categories, commandes, statistiques, likes, commentaires)
-- Deploiement multi-environnements via manifests Kubernetes
-
-## 2. Structure du projet
+## 1. Repository Structure
 
 ```text
-E-commerce-platform/
-|- backend/               # API REST Express + MongoDB
-|  |- server.js           # Point d'entree serveur
+projrt mern/
+|- backend/
+|  |- server.js
 |  |- src/
-|  |  |- controllers/     # Logique metier
-|  |  |- models/          # Schemas Mongoose
-|  |  |- routes/          # Endpoints API
-|  |  |- middleware/      # Auth/validation
-|  |  |- utils/           # Helpers / constantes
-|  |- scripts/seed.js     # Seed de donnees
+|  |  |- controllers/
+|  |  |- models/
+|  |  |- routes/
+|  |  |- middleware/
+|  |  |- services/
+|  |  |- utils/
+|  |  |- validators/
+|  |- scripts/seed.js
 |
-|- frontend/              # Application React
+|- frontend/
 |  |- src/components/
-|  |  |- admin/           # Ecrans admin
-|  |  |- user/            # Ecrans utilisateur
-|  |  |- ...              # Login/Register/ProductList/etc.
+|  |  |- admin/
+|  |  |- user/
+|  |  |- ...
 |
 |- k8s/
-|  |- namespaces/         # Namespaces dev/test/prod
-|  |- dev/                # Manifestes dev
-|  |- test/               # Manifestes test
-|  |- prod/               # Manifestes prod
+|  |- namespaces/namespaces.yaml
+|  |- dev/
+|  |- test/
+|  |- prod/
 |
-|- docker-compose.yml     # Stack locale mongo + backend + frontend
+|- docker-compose.yml
 ```
 
-## 3. Stack technique
+## 2. Backend MVC Architecture
 
-### Backend
+The backend mostly follows MVC:
 
-- express
-- mongoose
-- jsonwebtoken
-- bcryptjs
-- nodemailer
-- google-auth-library
-- cors
+- Models: MongoDB schema layer in `backend/src/models`
+- Controllers: business logic in `backend/src/controllers`
+- Routes: HTTP endpoints in `backend/src/routes`
+- App entrypoint and composition root: `backend/server.js`
 
-### Frontend
+### 2.1 Request Flow
 
-- react 19 + react-scripts
-- react-router-dom
-- @mui/material
-- @paypal/react-paypal-js
-- axios / fetch
-- js-cookie / jwt-decode
-
-## 4. Fonctionnalites principales
-
-### Cote utilisateur
-
-- Inscription / connexion
-- Recuperation mot de passe par code email
-- Changement email avec verification
-- Navigation produits + filtres categories
-- Detail produit (likes + commentaires)
-- Panier (ajout, suppression, MAJ quantite, tailles)
-- Checkout (adresse livraison)
-- Paiement PayPal ou Cash on Delivery
-- Historique commandes
-- Favoris
-
-### Cote admin
-
-- Gestion categories
-- Gestion produits
-- Gestion commandes
-- Moderation commentaires
-- Vue likes
-- Dashboard statistique
-
-## 5. Variables d'environnement
-
-## Backend (.env dans backend/)
-
-Le code backend lit principalement les variables ci-dessous (sensibles a la casse):
-
-```env
-PORT=3001
-MONGO_URI=mongodb://localhost:27017/ecommerce
-jwtSecret=jwtSecret
-tokenExpire=2562000
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_app_password
+```text
+Client -> Express Route -> Controller -> Mongoose Model -> MongoDB
+                           |
+                           +-> Middleware (auth/validation)
 ```
 
-Important:
+### 2.2 MVC Mapping in this Project
 
-- Le code utilise `jwtSecret` et `tokenExpire` en minuscules.
-- Certains manifests K8s utilisent `JWT_SECRET` / `TOKEN_EXPIRE` (majuscules). Si non mappes, l'auth peut echouer.
+- `backend/server.js` wires middleware, database connection, and route modules.
+- `backend/src/models/` defines entities such as User, product, Category, Order, Cart, Comment, Deals, likes.
+- `backend/src/controllers/` contains domain logic (users, products, categories, orders, cart, etc.).
+- `backend/src/routes/` exposes API endpoints and delegates to controllers.
 
-## Frontend (.env dans frontend/)
+### 2.3 Important Current State
 
-```env
-REACT_APP_API_URL=http://localhost:3001
-REACT_APP_PAYPAL_CLIENT_ID=your_paypal_client_id
-```
+There are two styles currently present in routes:
 
-Fallback code frontend:
+- Controller-based routes (MVC style), for example:
+  - `users.js`, `orders.js`, `likes.js`, `comments.js`, `deals.js`, `cart.js`
+- Inline route logic (route handles model logic directly), for example:
+  - `product.js`, `categoryRoutes.js`
 
-- API: `http://localhost:3001`
-- PayPal: une valeur par defaut est presente dans le code
+Also note that both `products.js` and `product.js` exist, but `server.js` currently mounts `product.js`.
 
-## 6. Installation locale (sans Docker)
+This means the architecture is mostly MVC, with some mixed route-level business logic still present.
 
-Prerequis:
+## 3. Backend Service Wiring
 
-- Node.js 18+
-- npm
-- MongoDB local
+In `backend/server.js`, the API is mounted under `/api` with these route roots:
 
-### 6.1 Backend
+- `/api/users`
+- `/api/products`
+- `/api/categories`
+- `/api/likes`
+- `/api/comments`
+- `/api/userinfo`
+- `/api/cart`
+- `/api/orders`
+- `/api/deals`
+- `/api/dashboard`
 
-```bash
-cd backend
-npm install
-```
+MongoDB connection is read from `MONGO_URI`.
 
-Lancer l'API:
+## 4. Kubernetes Deployment Structure
 
-```bash
-node server.js
-```
+Kubernetes manifests are organized by environment under `k8s/`.
 
-Seed optionnel:
+### 4.1 Namespaces
 
-```bash
-node scripts/seed.js
-```
+`k8s/namespaces/namespaces.yaml` creates:
 
-### 6.2 Frontend
+- `dev`
+- `test`
+- `prod`
 
-```bash
-cd frontend
-npm install
-npm start
-```
+### 4.2 Environment Layout
 
-Application disponible sur http://localhost:3000.
+Each environment defines the same main building blocks:
 
-## 7. Execution avec Docker Compose
+- MongoDB Deployment + Service + PVC
+- Backend Deployment + Service
+- Frontend Deployment + Service
+- ConfigMap and Secret for env-specific configuration
+- Ingress for host/path routing
 
-Le fichier `docker-compose.yml` definit:
+#### Dev (`k8s/dev`)
 
-- `mongo` sur 27017
-- `backend` sur 3001
-- `frontend` sur 3000
+- Namespace: `dev`
+- Main workload file: `all.yaml`
+- Config: `ConfigMap.yaml`, `Secret.yaml`
+- Ingress host: `dev.ecomp.codes`
+- Route split:
+  - `/api` -> backend service on port 3001
+  - `/` -> frontend service on port 80
 
-Commandes:
+#### Test (`k8s/test`)
 
-```bash
-docker compose up --build
-```
+- Namespace: `test`
+- Main workload file: `all.yaml`
+- Config: `ConfigMap.yaml`, `Secret.yaml`
+- Ingress host: `test.ecomp.codes`
+- Route split:
+  - `/api` -> backend service on port 3002
+  - `/` -> frontend service on port 80
 
-Notes importantes:
+#### Prod (`k8s/prod`)
 
-- Les `Dockerfile` utilisent `CMD ["npm","start"]`.
-- Dans `backend/package.json`, le script `start` n'est pas defini actuellement. Il faut en ajouter un (`"start": "node server.js"`) ou adapter le Dockerfile.
+- Namespace: `prod`
+- Workloads split into multiple files:
+  - `mongo.yaml`
+  - `backend.yaml`
+  - `frontend.yaml`
+- Config: `ConfigMap.yaml`, `Secret.yaml`
+- Ingress host: `prod.ecomp.codes`
+- Route split:
+  - `/api` -> backend service on port 3003
+  - `/` -> frontend service on port 80
 
-## 8. Kubernetes (dev/test/prod)
+## 5. Kubernetes Apply Order
 
-Le dossier `k8s/` contient trois environnements isoles:
+Use this order to deploy safely.
 
-- `dev` namespace `dev`
-- `test` namespace `test`
-- `prod` namespace `prod`
-
-### 8.1 Creer les namespaces
+### 5.1 One-time: create namespaces
 
 ```bash
 kubectl apply -f k8s/namespaces/namespaces.yaml
 ```
 
-### 8.2 Deployer en dev
+### 5.2 Dev
 
 ```bash
 kubectl apply -f k8s/dev/ConfigMap.yaml
 kubectl apply -f k8s/dev/Secret.yaml
 kubectl apply -f k8s/dev/all.yaml
+kubectl apply -f k8s/dev/ingress.yaml
 ```
 
-### 8.3 Deployer en test
+### 5.3 Test
 
 ```bash
 kubectl apply -f k8s/test/ConfigMap.yaml
@@ -212,7 +180,7 @@ kubectl apply -f k8s/test/all.yaml
 kubectl apply -f k8s/test/ingress.yaml
 ```
 
-### 8.4 Deployer en prod
+### 5.4 Prod
 
 ```bash
 kubectl apply -f k8s/prod/ConfigMap.yaml
@@ -223,81 +191,51 @@ kubectl apply -f k8s/prod/frontend.yaml
 kubectl apply -f k8s/prod/ingress.yaml
 ```
 
-Ingress configure:
+## 6. Local Development
 
-- `prod.ecomp.codes` (frontend + route `/api` vers backend)
-- `test.ecomp.codes` pour test
+### Backend
 
-## 9. API REST (resume)
+```bash
+cd backend
+npm install
+node server.js
+```
 
-Base URL locale: `http://localhost:3001/api`
+### Frontend
 
-### 9.1 Users
+```bash
+cd frontend
+npm install
+npm start
+```
 
-- `POST /users/register`
-- `POST /users/login`
-- `POST /users/forgot-password`
-- `POST /users/verify-reset-code`
-- `POST /users/reset-password`
-- `POST /users/send-email-verification-code`
-- `POST /users/resend-email-verification-code`
-- `POST /users/verify-email-change`
-- `GET /users`
+### Docker Compose
 
-### 9.2 User info
+```bash
+docker compose up --build
+```
 
-- `GET /userinfo/:id`
-- `POST /userinfo`
-- `PUT /userinfo/:id`
-- `DELETE /userinfo/:id`
+## 7. Configuration Notes
 
-### 9.3 Products
+Important environment naming note in backend code:
 
-- `GET /products`
-- `GET /products/:id`
-- `POST /products/add`
-- `PUT /products/:id`
-- `DELETE /products/:id`
+- JWT and expiry are read from lowercase names in code:
+  - `jwtSecret`
+  - `tokenExpire`
 
-### 9.4 Categories
+Some manifests currently provide uppercase variants (`JWT_SECRET`, `TOKEN_EXPIRE`).
+If they are not mapped to the exact expected names, authentication token generation can fail.
 
-- `GET /categories`
-- `GET /categories/:id`
-- `POST /categories/add`
-- `PUT /categories/:id`
-- `DELETE /categories/:id`
+Also note that `backend/package.json` currently does not define a `start` script, while `backend/Dockerfile` runs `npm start`.
 
-### 9.5 Cart
+## 8. Suggested Next Cleanup (Optional)
 
-- `GET /cart?userId=...`
-- `POST /cart/add`
-- `PUT /cart/update`
-- `DELETE /cart/remove`
-- `DELETE /cart/clear`
+To make architecture and deployment more consistent:
 
-### 9.6 Orders
-
-- `POST /orders`
-- `GET /orders?userId=...`
-- `GET /orders/all`
-- `PUT /orders/:id`
-- `DELETE /orders/:id`
-
-### 9.7 Likes
-
-- `POST /likes/add`
-- `DELETE /likes/remove`
-- `GET /likes`
-- `GET /likes/count`
-- `GET /likes/liked-products`
-
-### 9.8 Comments
-
-- `POST /comments/add`
-- `GET /comments?productId=...`
-- `GET /comments/all`
-- `PUT /comments/:id`
-- `DELETE /comments/:id`
+1. Standardize all route files to controller-based MVC (migrate logic from `product.js` and `categoryRoutes.js` into controllers).
+2. Keep only one product route module (`product.js` or `products.js`) and remove the duplicate.
+3. Align environment variable names across backend code, Kubernetes ConfigMaps/Secrets, and local `.env`.
+4. Add a backend `start` script in `backend/package.json` for Docker/runtime consistency.
 
 ### 9.9 Deals
 
